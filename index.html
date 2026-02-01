@@ -25,12 +25,11 @@
             padding: 40px;
             border-radius: 30px;
             box-shadow: 0 15px 35px rgba(214, 51, 132, 0.2);
-            max-width: 400px;
+            max-width: 500px;
             width: 90%;
-            position: relative;
+            z-index: 10;
         }
 
-        /* Вместо картинки используем большой анимированный эмодзи */
         .cat-emoji {
             font-size: 80px;
             margin-bottom: 20px;
@@ -54,29 +53,34 @@
         .buttons {
             display: flex;
             justify-content: center;
+            align-items: center; /* Центрируем, чтобы кнопка росла равномерно */
             gap: 20px;
-            min-height: 60px;
+            flex-wrap: wrap; /* Чтобы большая кнопка не ломала верстку */
         }
 
         button {
-            padding: 15px 35px;
-            font-size: 18px;
             border: none;
             border-radius: 50px;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.2s ease; /* Быстрая реакция на рост */
             font-weight: bold;
+            font-family: 'Montserrat', sans-serif;
         }
 
         .btn-yes {
             background-color: #ff4d6d;
             color: white;
             box-shadow: 0 4px 15px rgba(255, 77, 109, 0.4);
+            padding: 15px 35px;
+            font-size: 18px;
         }
 
         .btn-no {
             background-color: #adb5bd;
             color: white;
+            padding: 15px 35px;
+            font-size: 18px;
+            z-index: 1000;
         }
 
         #success {
@@ -95,8 +99,8 @@
         <h1 id="question">Яна, будешь моей +1 на всех мероприятиях и посиделках с друзьями?</h1>
         
         <div class="buttons" id="mainButtons">
-            <button class="btn-yes" onclick="sheSaidYes()">Да!</button>
-            <button class="btn-no" id="noBtn" onmouseover="moveButton()" onclick="moveButton()" ontouchstart="moveButton()">Нет</button>
+            <button class="btn-yes" id="yesBtn" onclick="sheSaidYes()">Да!</button>
+            <button class="btn-no" id="noBtn" onmouseover="handleNo()" onclick="handleNo()" ontouchstart="handleNo()">Нет</button>
         </div>
 
         <div id="success">
@@ -105,9 +109,17 @@
     </div>
 
     <script>
+        let yesButtonSize = 18; // Начальный размер шрифта
+        let yesPaddingHeight = 15;
+        let yesPaddingWidth = 35;
+
+        function handleNo() {
+            moveButton();
+            makeYesBigger();
+        }
+
         function moveButton() {
             const noBtn = document.getElementById('noBtn');
-            // Случайное положение, учитывая размеры экрана
             const x = Math.random() * (window.innerWidth - noBtn.offsetWidth);
             const y = Math.random() * (window.innerHeight - noBtn.offsetHeight);
             
@@ -116,11 +128,29 @@
             noBtn.style.top = y + 'px';
         }
 
+        function makeYesBigger() {
+            const yesBtn = document.getElementById('yesBtn');
+            
+            // Увеличиваем значения
+            yesButtonSize += 5; 
+            yesPaddingHeight += 5;
+            yesPaddingWidth += 10;
+
+            // Применяем новые стили
+            yesBtn.style.fontSize = yesButtonSize + 'px';
+            yesBtn.style.padding = yesPaddingHeight + 'px ' + yesPaddingWidth + 'px';
+            
+            // Если кнопка стала слишком большой, ограничим, чтобы она не перекрыла всё сразу слишком быстро
+            if (yesButtonSize > 100) {
+                yesBtn.innerText = "ДА!!! ❤️";
+            }
+        }
+
         function sheSaidYes() {
             document.getElementById('question').style.display = 'none';
             document.getElementById('mainButtons').style.display = 'none';
             document.getElementById('success').style.display = 'block';
-            document.getElementById('icon').innerHTML = '😻'; // Меняем котика на влюбленного
+            document.getElementById('icon').innerHTML = '😻';
             document.getElementById('icon').style.animation = 'bounce 0.5s infinite';
         }
     </script>
