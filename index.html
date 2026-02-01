@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Для Яны 😊</title>
+    <title>Для Яны ❤️</title>
     <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
     <style>
         body {
@@ -25,7 +25,7 @@
             padding: 40px;
             border-radius: 30px;
             box-shadow: 0 15px 35px rgba(214, 51, 132, 0.15);
-            max-width: 500px;
+            max-width: 550px;
             width: 90%;
             z-index: 10;
         }
@@ -55,7 +55,7 @@
             justify-content: center;
             align-items: center;
             gap: 20px;
-            min-height: 150px; /* Чтобы контейнер не прыгал от роста кнопки */
+            min-height: 220px;
         }
 
         button {
@@ -79,17 +79,27 @@
         .btn-no {
             background-color: #adb5bd;
             color: white;
-            padding: 15px 35px;
-            font-size: 18px;
+            padding: 12px 25px;
+            font-size: 16px;
             z-index: 1000;
         }
 
         #success {
             display: none;
             color: #d63384;
+        }
+
+        .irony-text {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: #555;
+        }
+
+        .warm-text {
             font-family: 'Pacifico', cursive;
-            font-size: 28px;
-            line-height: 1.5;
+            font-size: 26px;
         }
     </style>
 </head>
@@ -98,15 +108,16 @@
     <div class="container">
         <div id="icon" class="cat-emoji">🐱</div>
         
-        <h1 id="question">Яна, составишь мне компанию на всяких тусовках и посиделках с друзьями? 😊</h1>
+        <h1 id="question">Яна, будешь моей +1 на всех мероприятиях и посиделках с друзьями? 😊</h1>
         
         <div class="buttons" id="mainButtons">
-            <button class="btn-yes" id="yesBtn" onclick="sheSaidYes()">Конечно!</button>
-            <button class="btn-no" id="noBtn" onmouseover="handleNo()" onclick="handleNo()" ontouchstart="handleNo()">Не-а</button>
+            <button class="btn-yes" id="yesBtn" onclick="sheSaidYes()">Да!</button>
+            <button class="btn-no" id="noBtn" onmouseover="handleNo()" onclick="handleNo()" ontouchstart="handleNo()">Нет</button>
         </div>
 
         <div id="success">
-            Класс! Я очень рад 😊<br>Значит, скоро увидимся!
+            <div class="irony-text">Вау, ты правда согласилась! Как неожиданно (нет) 😂</div>
+            <div class="warm-text">На самом деле, я очень рад. Будет круто! ❤️</div>
         </div>
     </div>
 
@@ -121,11 +132,11 @@
             makeYesBigger();
             noCount++;
             
-            // Маленькая шутка при попытках нажать "Нет"
             const yesBtn = document.getElementById('yesBtn');
-            if (noCount > 3) yesBtn.innerText = "Жми сюда! 😉";
-            if (noCount > 6) yesBtn.innerText = "Без вариантов!";
-            if (noCount > 10) yesBtn.innerText = "Ну всё, ты попалась! 😂";
+            if (noCount > 2) yesBtn.innerText = "Подумай ещё... 😉";
+            if (noCount > 5) yesBtn.innerText = "Да хватит уже мучить кнопку! 😂";
+            if (noCount > 8) yesBtn.innerText = "Сдавайся, Яна! ❤️";
+            if (noCount > 12) yesBtn.innerText = "БЕЗ ВАРИАНТОВ!";
         }
 
         function moveButton() {
@@ -140,9 +151,9 @@
 
         function makeYesBigger() {
             const yesBtn = document.getElementById('yesBtn');
-            yesButtonSize += 7; 
-            yesPaddingHeight += 5;
-            yesPaddingWidth += 10;
+            yesButtonSize += 9; 
+            yesPaddingHeight += 6;
+            yesPaddingWidth += 14;
 
             yesBtn.style.fontSize = yesButtonSize + 'px';
             yesBtn.style.padding = yesPaddingHeight + 'px ' + yesPaddingWidth + 'px';
@@ -152,7 +163,7 @@
             document.getElementById('question').style.display = 'none';
             document.getElementById('mainButtons').style.display = 'none';
             document.getElementById('success').style.display = 'block';
-            document.getElementById('icon').innerHTML = '😸';
+            document.getElementById('icon').innerHTML = '😻';
             document.getElementById('icon').style.animation = 'bounce 0.5s infinite';
         }
     </script>
