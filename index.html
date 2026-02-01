@@ -10,19 +10,20 @@
         body {
             margin: 0; padding: 0; height: 100vh;
             display: flex; justify-content: center; align-items: center;
-            background-color: #fce1e4;
+            background-color: #ffc0cb;
             background-image: linear-gradient(135deg, #fce1e4 0%, #ffd1ff 100%);
             font-family: 'Montserrat', sans-serif;
             overflow: hidden;
             touch-action: manipulation;
         }
 
+        /* Плавающие сердечки (заполняют весь экран) */
         .hearts-bg {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            pointer-events: none; z-index: 1; 
+            pointer-events: none; z-index: 2; 
         }
         .heart {
-            position: absolute; color: rgba(255, 255, 255, 0.7);
+            position: absolute; color: rgba(255, 255, 255, 0.8);
             font-size: 20px; animation: float 5s linear infinite;
         }
         @keyframes float {
@@ -30,45 +31,37 @@
             100% { transform: translateY(-15vh) rotate(360deg); opacity: 0; }
         }
 
-        /* Оболочка письма */
-        .letter-container {
-            position: relative;
-            z-index: 10;
-            width: 90%;
-            max-width: 360px;
-            perspective: 1000px;
-        }
-
-        /* Сама записка */
-        .paper {
-            background: #fff;
-            padding: 40px 25px;
-            border-radius: 5px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            position: relative;
+        /* То самое скругленное окно */
+        .container {
             text-align: center;
-            border: 1px solid #f0f0f0;
+            background: rgba(255, 255, 255, 0.65);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            padding: 35px 25px; 
+            border-radius: 40px; /* Красивое скругление */
+            box-shadow: 0 15px 35px rgba(214, 51, 132, 0.15);
+            width: 85%; 
+            max-width: 360px;
+            min-height: 420px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+            border: 1px solid rgba(255, 255, 255, 0.4);
         }
 
-        /* Эффект загнутого уголка */
-        .paper::after {
-            content: "";
-            position: absolute;
-            top: 0; right: 0;
-            border-width: 0 25px 25px 0;
-            border-style: solid;
-            border-color: #fce1e4 #fce1e4 #e0e0e0 #e0e0e0;
-            display: block; width: 0;
-        }
-
-        .cat-emoji { font-size: 60px; margin-bottom: 20px; display: inline-block; animation: bounce 2s infinite; }
+        .cat-emoji { font-size: 70px; margin-bottom: 15px; animation: bounce 2.5s infinite; }
         @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
 
-        h1 { color: #d63384; font-family: 'Pacifico', cursive; font-size: 20px; margin-bottom: 30px; line-height: 1.4; }
+        h1 { 
+            color: #d63384; font-family: 'Pacifico', cursive; font-size: 22px; 
+            margin-bottom: 20px; line-height: 1.4; min-height: 80px; 
+        }
 
         .button-area {
             display: flex; justify-content: center; align-items: center;
-            min-height: 220px; position: relative; width: 100%;
+            gap: 15px; width: 100%; min-height: 200px; position: relative;
         }
 
         button { 
@@ -78,18 +71,22 @@
             -webkit-tap-highlight-color: transparent;
         }
 
-        .btn-yes { background-color: #ff4d6d; color: white; padding: 15px 30px; font-size: 18px; z-index: 5; box-shadow: 0 5px 15px rgba(255,77,109,0.3); }
+        .btn-yes { 
+            background-color: #ff4d6d; color: white; 
+            padding: 16px 32px; font-size: 18px; z-index: 11; 
+            box-shadow: 0 5px 15px rgba(255, 77, 109, 0.3);
+        }
         .btn-no { background-color: #adb5bd; color: white; padding: 12px 25px; font-size: 16px; z-index: 1000; }
 
-        #success { display: none; color: #d63384; }
-        .irony-text { font-size: 16px; font-weight: 700; margin-bottom: 15px; color: #555; }
-        .warm-text { font-family: 'Pacifico', cursive; font-size: 22px; }
+        #success { display: none; color: #d63384; width: 100%; }
+        .irony-text { font-size: 17px; font-weight: 700; margin-bottom: 15px; color: #555; padding: 0 10px; }
+        .warm-text { font-family: 'Pacifico', cursive; font-size: 26px; }
 
         .shake { animation: shake 0.4s ease; }
         @keyframes shake {
             0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-5px); }
-            75% { transform: translateX(5px); }
+            25% { transform: translateX(-6px); }
+            75% { transform: translateX(6px); }
         }
     </style>
 </head>
@@ -97,21 +94,18 @@
 
     <div class="hearts-bg" id="hearts-bg"></div>
 
-    <div class="letter-container" id="mainCard">
-        <div class="paper">
-            <div id="icon" class="cat-emoji">🐱</div>
-            
-            <h1 id="question">Яна, будешь моей +1 на всех мероприятиях и посиделках с друзьями? 😊</h1>
-            
-            <div class="button-area" id="mainButtons">
-                <button class="btn-yes" id="yesBtn" onclick="sheSaidYes()">Да!</button>
-                <button class="btn-no" id="noBtn" onmousedown="handleNo()" ontouchstart="handleNo()">Нет</button>
-            </div>
+    <div class="container" id="mainCard">
+        <div id="icon" class="cat-emoji">🐱</div>
+        <h1 id="question">Яна, будешь моей +1 на всех мероприятиях и посиделках с друзьями? 😊</h1>
+        
+        <div class="button-area" id="mainButtons">
+            <button class="btn-yes" id="yesBtn" onclick="sheSaidYes()">Да!</button>
+            <button class="btn-no" id="noBtn" onmousedown="handleNo()" ontouchstart="handleNo()">Нет</button>
+        </div>
 
-            <div id="success">
-                <div class="irony-text">Вау, ты правда согласилась! Как неожиданно (нет) 😂</div>
-                <div class="warm-text">На самом деле, я очень рад. Будет круто! ❤️</div>
-            </div>
+        <div id="success">
+            <div class="irony-text">Вау, ты правда согласилась! Как неожиданно (нет) 😂</div>
+            <div class="warm-text">На самом деле, я очень рад. Будет круто! ❤️</div>
         </div>
     </div>
 
@@ -126,7 +120,7 @@
                 heart.style.animationDuration = (Math.random() * 2 + 3) + 's';
                 bg.appendChild(heart);
                 setTimeout(() => heart.remove(), 5000);
-            }, 500);
+            }, 400);
         }
         createHearts();
 
@@ -145,7 +139,7 @@
             if (noCount <= 12) {
                 yesButtonSize += 4;
                 yesBtn.style.fontSize = yesButtonSize + 'px';
-                yesBtn.style.padding = (15 + noCount * 2) + 'px ' + (30 + noCount * 4) + 'px';
+                yesBtn.style.padding = (16 + noCount * 2) + 'px ' + (32 + noCount * 4) + 'px';
             }
 
             if (noCount === 2) yesBtn.innerText = "Подумай ещё... 😉";
@@ -159,18 +153,26 @@
             const yesBtn = document.getElementById('yesBtn');
             const rect = yesBtn.getBoundingClientRect();
             
-            const p = 30;
-            const mW = window.innerWidth - noBtn.offsetWidth - p;
-            const mH = window.innerHeight - noBtn.offsetHeight - p;
+            const padding = 35;
+            const maxWidth = window.innerWidth - noBtn.offsetWidth - padding;
+            const maxHeight = window.innerHeight - noBtn.offsetHeight - padding;
 
             let x, y, attempts = 0;
-            while (attempts < 50) {
-                x = Math.max(p, Math.random() * mW);
-                y = Math.max(p, Math.random() * mH);
+            let isOverlapping = true;
+
+            while (isOverlapping && attempts < 50) {
+                x = Math.max(padding, Math.random() * maxWidth);
+                y = Math.max(padding, Math.random() * maxHeight);
                 attempts++;
-                const hO = x + noBtn.offsetWidth > rect.left - 40 && x < rect.right + 40;
-                const vO = y + noBtn.offsetHeight > rect.top - 40 && y < rect.bottom + 40;
-                if (noCount <= 4) { if (!(hO && vO)) break; } else break;
+
+                const hOverlap = x + noBtn.offsetWidth > rect.left - 40 && x < rect.right + 40;
+                const vOverlap = y + noBtn.offsetHeight > rect.top - 40 && y < rect.bottom + 40;
+
+                if (noCount <= 4) {
+                    if (!(hOverlap && vOverlap)) isOverlapping = false;
+                } else {
+                    isOverlapping = false;
+                }
             }
             noBtn.style.position = 'fixed';
             noBtn.style.left = x + 'px';
@@ -182,7 +184,12 @@
             document.getElementById('mainButtons').style.display = 'none';
             document.getElementById('success').style.display = 'block';
             document.getElementById('icon').innerHTML = '😻';
-            confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
+            confetti({ 
+                particleCount: 150, 
+                spread: 70, 
+                origin: { y: 0.6 }, 
+                colors: ['#ff4d6d', '#ffffff', '#ffc0cb'] 
+            });
         }
     </script>
 </body>
