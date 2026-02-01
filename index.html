@@ -15,71 +15,71 @@
             font-family: 'Montserrat', sans-serif;
             overflow: hidden;
             touch-action: manipulation;
-            transition: background-color 0.2s ease; /* Для эффекта вспышки */
         }
 
-        /* Плавающие сердечки */
+        /* Сердечки теперь поверх фона, но под текстом */
         .hearts-bg {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            pointer-events: none; z-index: 1;
+            pointer-events: none; z-index: 2; 
         }
         .heart {
-            position: absolute; color: rgba(255, 255, 255, 0.7);
+            position: absolute; color: rgba(255, 255, 255, 0.8);
             font-size: 20px; animation: float 5s linear infinite;
         }
         @keyframes float {
             0% { transform: translateY(110vh) rotate(0deg); opacity: 1; }
-            100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
+            100% { transform: translateY(-15vh) rotate(360deg); opacity: 0; }
         }
 
-        /* Стиль карточки под iOS */
         .container {
             text-align: center;
-            background: rgba(255, 255, 255, 0.75);
-            backdrop-filter: blur(15px); /* Тот самый эффект стекла iPhone */
-            -webkit-backdrop-filter: blur(15px);
-            padding: 35px 25px; border-radius: 35px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.05);
-            width: 85%; max-width: 380px; z-index: 10;
-            border: 1px solid rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.6); /* Больше прозрачности */
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            padding: 30px 20px; border-radius: 35px;
+            box-shadow: 0 15px 35px rgba(214, 51, 132, 0.1);
+            width: 85%; 
+            max-width: 360px; /* Уменьшили ширину */
+            min-height: 420px; /* Фиксированная высота для обеих страниц */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+            border: 1px solid rgba(255, 255, 255, 0.4);
         }
 
-        .cat-emoji { font-size: 70px; margin-bottom: 15px; display: inline-block; animation: bounce 2.5s infinite; }
-        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
+        .cat-emoji { font-size: 65px; margin-bottom: 15px; animation: bounce 2.5s infinite; }
+        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
 
-        h1 { color: #d63384; font-family: 'Pacifico', cursive; font-size: 22px; margin-bottom: 25px; line-height: 1.4; }
+        h1 { 
+            color: #d63384; font-family: 'Pacifico', cursive; font-size: 22px; 
+            margin-bottom: 20px; line-height: 1.3; min-height: 80px; 
+        }
 
         .button-area {
             display: flex; justify-content: center; align-items: center;
-            gap: 15px; min-height: 260px; position: relative;
+            gap: 15px; width: 100%; min-height: 200px; position: relative;
         }
 
         button { 
             border: none; border-radius: 50px; cursor: pointer; 
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Плавный отскок как в iOS */
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             font-weight: bold; font-family: 'Montserrat', sans-serif;
-            -webkit-tap-highlight-color: transparent;
         }
 
-        .btn-yes { 
-            background-color: #ff4d6d; color: white; 
-            padding: 16px 32px; font-size: 18px; z-index: 5;
-            box-shadow: 0 8px 20px rgba(255, 77, 109, 0.3);
-            white-space: normal;
-        }
-
+        .btn-yes { background-color: #ff4d6d; color: white; padding: 16px 32px; font-size: 18px; z-index: 11; }
         .btn-no { background-color: #adb5bd; color: white; padding: 12px 25px; font-size: 16px; z-index: 1000; }
 
-        #success { display: none; color: #d63384; }
-        .irony-text { font-size: 16px; font-weight: 700; margin-bottom: 10px; color: #555; }
-        .warm-text { font-family: 'Pacifico', cursive; font-size: 26px; }
+        #success { display: none; color: #d63384; width: 100%; }
+        .irony-text { font-size: 16px; font-weight: 700; margin-bottom: 15px; color: #555; padding: 0 10px; }
+        .warm-text { font-family: 'Pacifico', cursive; font-size: 24px; }
 
-        /* Анимация встряски для "Нет" */
         .shake { animation: shake 0.4s ease; }
         @keyframes shake {
             0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-5px); }
-            75% { transform: translateX(5px); }
+            25% { transform: translateX(-6px); }
+            75% { transform: translateX(6px); }
         }
     </style>
 </head>
@@ -110,10 +110,10 @@
                 heart.classList.add('heart');
                 heart.innerHTML = '❤️';
                 heart.style.left = Math.random() * 100 + 'vw';
-                heart.style.animationDuration = (Math.random() * 2 + 4) + 's';
+                heart.style.animationDuration = (Math.random() * 2 + 3) + 's';
                 bg.appendChild(heart);
                 setTimeout(() => heart.remove(), 5000);
-            }, 6000 / 10);
+            }, 400); // Чаще летят
         }
         createHearts();
 
@@ -123,11 +123,9 @@
         function handleNo() {
             noCount++;
             moveButton();
-            
-            // Эффект встряски карточки вместо вибрации
             const card = document.getElementById('mainCard');
             card.classList.remove('shake');
-            void card.offsetWidth; // Магия для перезапуска анимации
+            void card.offsetWidth;
             card.classList.add('shake');
 
             const yesBtn = document.getElementById('yesBtn');
@@ -148,7 +146,6 @@
             const yesBtn = document.getElementById('yesBtn');
             const rect = yesBtn.getBoundingClientRect();
             let x, y, attempts = 0;
-
             while (attempts < 30) {
                 x = Math.random() * (window.innerWidth - noBtn.offsetWidth - 40) + 20;
                 y = Math.random() * (window.innerHeight - noBtn.offsetHeight - 40) + 20;
