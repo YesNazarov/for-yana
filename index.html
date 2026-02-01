@@ -37,7 +37,8 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 280px; /* Фиксируем место под кнопки */
+            gap: 20px; /* Изначальное расстояние между кнопками */
+            min-height: 250px;
             position: relative;
         }
 
@@ -59,7 +60,6 @@
         .btn-no { 
             background-color: #adb5bd; color: white; 
             padding: 12px 25px; font-size: 16px; 
-            position: absolute; /* В начале она в контейнере */
             z-index: 1000;
         }
 
@@ -95,14 +95,14 @@
             
             const yesBtn = document.getElementById('yesBtn');
             
-            // Замедляем рост: прибавляем всего по 4px к шрифту
+            // Замедляем рост кнопки Да
             if (noCount <= 12) {
                 yesButtonSize += 4;
                 yesBtn.style.fontSize = yesButtonSize + 'px';
                 yesBtn.style.padding = (15 + noCount * 2) + 'px ' + (30 + noCount * 4) + 'px';
             }
 
-            // Тексты меняются вовремя
+            // Тексты меняются по порядку
             if (noCount === 2) yesBtn.innerText = "Подумай ещё... 😉";
             if (noCount === 5) yesBtn.innerText = "Хватит мучить кнопку! 😂";
             if (noCount === 8) yesBtn.innerText = "Сдавайся, Яна! ❤️";
@@ -116,17 +116,22 @@
 
             let x, y;
             let isOverlapping = true;
+            let attempts = 0;
 
-            // Цикл подбора координат, пока "Нет" не окажется вне "Да"
-            while (isOverlapping) {
+            while (isOverlapping && attempts < 20) {
                 x = Math.random() * (window.innerWidth - noBtn.offsetWidth - 20) + 10;
                 y = Math.random() * (window.innerHeight - noBtn.offsetHeight - 20) + 10;
+                attempts++;
 
-                // Проверка на наложение (с запасом 20px)
-                const horizontalOverlap = x + noBtn.offsetWidth > rect.left - 20 && x < rect.right + 20;
-                const verticalOverlap = y + noBtn.offsetHeight > rect.top - 20 && y < rect.bottom + 20;
+                // Проверка на наложение на кнопку Да
+                const horizontalOverlap = x + noBtn.offsetWidth > rect.left - 30 && x < rect.right + 30;
+                const verticalOverlap = y + noBtn.offsetHeight > rect.top - 30 && y < rect.bottom + 30;
 
-                if (!(horizontalOverlap && verticalOverlap) || noCount > 15) {
+                // В первые 4 нажатия строго НЕ попадаем на Да
+                if (noCount <= 4) {
+                    if (!(horizontalOverlap && verticalOverlap)) isOverlapping = false;
+                } else {
+                    // После 4 нажатия - пусть прыгает куда угодно
                     isOverlapping = false;
                 }
             }
