@@ -15,68 +15,85 @@
             font-family: 'Montserrat', sans-serif;
             overflow: hidden;
             touch-action: manipulation;
+            transition: background-color 0.2s ease; /* Для эффекта вспышки */
         }
 
+        /* Плавающие сердечки */
+        .hearts-bg {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: 1;
+        }
+        .heart {
+            position: absolute; color: rgba(255, 255, 255, 0.7);
+            font-size: 20px; animation: float 5s linear infinite;
+        }
+        @keyframes float {
+            0% { transform: translateY(110vh) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
+        }
+
+        /* Стиль карточки под iOS */
         .container {
             text-align: center;
-            background: rgba(255, 255, 255, 0.9);
-            padding: 30px 20px;
-            border-radius: 30px;
-            box-shadow: 0 15px 35px rgba(214, 51, 132, 0.15);
-            width: 85%;
-            max-width: 400px;
-            z-index: 10;
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(15px); /* Тот самый эффект стекла iPhone */
+            -webkit-backdrop-filter: blur(15px);
+            padding: 35px 25px; border-radius: 35px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.05);
+            width: 85%; max-width: 380px; z-index: 10;
+            border: 1px solid rgba(255, 255, 255, 0.3);
         }
 
-        .cat-emoji { font-size: 60px; margin-bottom: 10px; display: inline-block; animation: bounce 2s infinite; }
-        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+        .cat-emoji { font-size: 70px; margin-bottom: 15px; display: inline-block; animation: bounce 2.5s infinite; }
+        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
 
-        h1 { color: #d63384; font-family: 'Pacifico', cursive; font-size: 22px; margin-bottom: 20px; min-height: 60px; }
+        h1 { color: #d63384; font-family: 'Pacifico', cursive; font-size: 22px; margin-bottom: 25px; line-height: 1.4; }
 
         .button-area {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 20px; /* Изначальное расстояние между кнопками */
-            min-height: 250px;
-            position: relative;
+            display: flex; justify-content: center; align-items: center;
+            gap: 15px; min-height: 260px; position: relative;
         }
 
         button { 
             border: none; border-radius: 50px; cursor: pointer; 
-            transition: all 0.3s ease; font-weight: bold; 
-            font-family: 'Montserrat', sans-serif;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Плавный отскок как в iOS */
+            font-weight: bold; font-family: 'Montserrat', sans-serif;
+            -webkit-tap-highlight-color: transparent;
         }
 
         .btn-yes { 
             background-color: #ff4d6d; color: white; 
-            box-shadow: 0 4px 15px rgba(255, 77, 109, 0.4); 
-            padding: 15px 30px; font-size: 18px; 
-            z-index: 5;
-            max-width: 100%;
+            padding: 16px 32px; font-size: 18px; z-index: 5;
+            box-shadow: 0 8px 20px rgba(255, 77, 109, 0.3);
             white-space: normal;
         }
 
-        .btn-no { 
-            background-color: #adb5bd; color: white; 
-            padding: 12px 25px; font-size: 16px; 
-            z-index: 1000;
-        }
+        .btn-no { background-color: #adb5bd; color: white; padding: 12px 25px; font-size: 16px; z-index: 1000; }
 
         #success { display: none; color: #d63384; }
         .irony-text { font-size: 16px; font-weight: 700; margin-bottom: 10px; color: #555; }
-        .warm-text { font-family: 'Pacifico', cursive; font-size: 24px; }
+        .warm-text { font-family: 'Pacifico', cursive; font-size: 26px; }
+
+        /* Анимация встряски для "Нет" */
+        .shake { animation: shake 0.4s ease; }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
     </style>
 </head>
 <body>
 
-    <div class="container">
+    <div class="hearts-bg" id="hearts-bg"></div>
+
+    <div class="container" id="mainCard">
         <div id="icon" class="cat-emoji">🐱</div>
         <h1 id="question">Яна, будешь моей +1 на всех мероприятиях и посиделках с друзьями? 😊</h1>
         
         <div class="button-area" id="mainButtons">
             <button class="btn-yes" id="yesBtn" onclick="sheSaidYes()">Да!</button>
-            <button class="btn-no" id="noBtn" onmouseover="handleNo()" onclick="handleNo()" ontouchstart="handleNo()">Нет</button>
+            <button class="btn-no" id="noBtn" onmousedown="handleNo()" ontouchstart="handleNo()">Нет</button>
         </div>
 
         <div id="success">
@@ -86,6 +103,20 @@
     </div>
 
     <script>
+        function createHearts() {
+            const bg = document.getElementById('hearts-bg');
+            setInterval(() => {
+                const heart = document.createElement('div');
+                heart.classList.add('heart');
+                heart.innerHTML = '❤️';
+                heart.style.left = Math.random() * 100 + 'vw';
+                heart.style.animationDuration = (Math.random() * 2 + 4) + 's';
+                bg.appendChild(heart);
+                setTimeout(() => heart.remove(), 5000);
+            }, 6000 / 10);
+        }
+        createHearts();
+
         let yesButtonSize = 18;
         let noCount = 0;
 
@@ -93,16 +124,19 @@
             noCount++;
             moveButton();
             
+            // Эффект встряски карточки вместо вибрации
+            const card = document.getElementById('mainCard');
+            card.classList.remove('shake');
+            void card.offsetWidth; // Магия для перезапуска анимации
+            card.classList.add('shake');
+
             const yesBtn = document.getElementById('yesBtn');
-            
-            // Замедляем рост кнопки Да
             if (noCount <= 12) {
                 yesButtonSize += 4;
                 yesBtn.style.fontSize = yesButtonSize + 'px';
-                yesBtn.style.padding = (15 + noCount * 2) + 'px ' + (30 + noCount * 4) + 'px';
+                yesBtn.style.padding = (16 + noCount * 2) + 'px ' + (32 + noCount * 4) + 'px';
             }
 
-            // Тексты меняются по порядку
             if (noCount === 2) yesBtn.innerText = "Подумай ещё... 😉";
             if (noCount === 5) yesBtn.innerText = "Хватит мучить кнопку! 😂";
             if (noCount === 8) yesBtn.innerText = "Сдавайся, Яна! ❤️";
@@ -113,29 +147,16 @@
             const noBtn = document.getElementById('noBtn');
             const yesBtn = document.getElementById('yesBtn');
             const rect = yesBtn.getBoundingClientRect();
+            let x, y, attempts = 0;
 
-            let x, y;
-            let isOverlapping = true;
-            let attempts = 0;
-
-            while (isOverlapping && attempts < 20) {
-                x = Math.random() * (window.innerWidth - noBtn.offsetWidth - 20) + 10;
-                y = Math.random() * (window.innerHeight - noBtn.offsetHeight - 20) + 10;
+            while (attempts < 30) {
+                x = Math.random() * (window.innerWidth - noBtn.offsetWidth - 40) + 20;
+                y = Math.random() * (window.innerHeight - noBtn.offsetHeight - 40) + 20;
                 attempts++;
-
-                // Проверка на наложение на кнопку Да
-                const horizontalOverlap = x + noBtn.offsetWidth > rect.left - 30 && x < rect.right + 30;
-                const verticalOverlap = y + noBtn.offsetHeight > rect.top - 30 && y < rect.bottom + 30;
-
-                // В первые 4 нажатия строго НЕ попадаем на Да
-                if (noCount <= 4) {
-                    if (!(horizontalOverlap && verticalOverlap)) isOverlapping = false;
-                } else {
-                    // После 4 нажатия - пусть прыгает куда угодно
-                    isOverlapping = false;
-                }
+                const hOverlap = x + noBtn.offsetWidth > rect.left - 40 && x < rect.right + 40;
+                const vOverlap = y + noBtn.offsetHeight > rect.top - 40 && y < rect.bottom + 40;
+                if (noCount <= 4) { if (!(hOverlap && vOverlap)) break; } else break;
             }
-            
             noBtn.style.position = 'fixed';
             noBtn.style.left = x + 'px';
             noBtn.style.top = y + 'px';
@@ -146,12 +167,7 @@
             document.getElementById('mainButtons').style.display = 'none';
             document.getElementById('success').style.display = 'block';
             document.getElementById('icon').innerHTML = '😻';
-            
-            confetti({
-                particleCount: 150,
-                spread: 70,
-                origin: { y: 0.6 }
-            });
+            confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 }, colors: ['#ff4d6d', '#ffffff', '#ffc0cb'] });
         }
     </script>
 </body>
