@@ -27,17 +27,25 @@
             box-shadow: 0 15px 35px rgba(214, 51, 132, 0.2);
             max-width: 400px;
             width: 90%;
+            position: relative;
         }
 
-        .cat-logo {
-            width: 180px;
-            height: auto;
+        /* Вместо картинки используем большой анимированный эмодзи */
+        .cat-emoji {
+            font-size: 80px;
             margin-bottom: 20px;
+            display: inline-block;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
         }
 
         h1 {
             color: #d63384;
-            font-family: 'Pacifico', cursive; /* Рукописный шрифт */
+            font-family: 'Pacifico', cursive;
             font-size: 26px;
             margin-bottom: 30px;
             line-height: 1.4;
@@ -47,6 +55,7 @@
             display: flex;
             justify-content: center;
             gap: 20px;
+            min-height: 60px;
         }
 
         button {
@@ -57,7 +66,6 @@
             cursor: pointer;
             transition: all 0.3s ease;
             font-weight: bold;
-            font-family: 'Montserrat', sans-serif;
         }
 
         .btn-yes {
@@ -67,9 +75,8 @@
         }
 
         .btn-no {
-            background-color: #888;
+            background-color: #adb5bd;
             color: white;
-            z-index: 1000;
         }
 
         #success {
@@ -77,20 +84,13 @@
             color: #d63384;
             font-family: 'Pacifico', cursive;
             font-size: 30px;
-            animation: heartBeat 1.2s infinite;
-        }
-
-        @keyframes heartBeat {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-            100% { transform: scale(1); }
         }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExOHIycXU0M2p3ZXFwZ3p6bmZ6bmZ6bmZ6bmZ6bmZ6bmZ6bmZ6JmVwPXYxX3N0aWNrZXJzX3NlYXJjaCZjdD1z/Y4vS6O0Tdzf6Q1R8s7/giphy.gif" alt="Милый котик" class="cat-logo">
+        <div id="icon" class="cat-emoji">🐱</div>
         
         <h1 id="question">Яна, будешь моей +1 на всех мероприятиях и посиделках с друзьями?</h1>
         
@@ -107,26 +107,21 @@
     <script>
         function moveButton() {
             const noBtn = document.getElementById('noBtn');
-            const padding = 50;
+            // Случайное положение, учитывая размеры экрана
+            const x = Math.random() * (window.innerWidth - noBtn.offsetWidth);
+            const y = Math.random() * (window.innerHeight - noBtn.offsetHeight);
             
-            const maxX = window.innerWidth - noBtn.offsetWidth - padding;
-            const maxY = window.innerHeight - noBtn.offsetHeight - padding;
-            
-            const newX = Math.random() * maxX;
-            const newY = Math.random() * maxY;
-
             noBtn.style.position = 'fixed';
-            noBtn.style.left = newX + 'px';
-            noBtn.style.top = newY + 'px';
+            noBtn.style.left = x + 'px';
+            noBtn.style.top = y + 'px';
         }
 
         function sheSaidYes() {
             document.getElementById('question').style.display = 'none';
             document.getElementById('mainButtons').style.display = 'none';
             document.getElementById('success').style.display = 'block';
-            
-            // Меняем котика на более радостного
-            document.querySelector('.cat-logo').src = "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExOHIycXU0M2p3ZXFwZ3p6bmZ6bmZ6bmZ6bmZ6bmZ6bmZ6bmZ6JmVwPXYxX3N0aWNrZXJzX3NlYXJjaCZjdD1z/MDJ9AdXYo89LpUKRnD/giphy.gif";
+            document.getElementById('icon').innerHTML = '😻'; // Меняем котика на влюбленного
+            document.getElementById('icon').style.animation = 'bounce 0.5s infinite';
         }
     </script>
 </body>
