@@ -17,7 +17,6 @@
             touch-action: manipulation;
         }
 
-        /* Плавающие сердечки (заполняют весь экран) */
         .hearts-bg {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             pointer-events: none; z-index: 2; 
@@ -31,15 +30,18 @@
             100% { transform: translateY(-15vh) rotate(360deg); opacity: 0; }
         }
 
-        /* То самое скругленное окно */
+        /* Стиль "Жидкое стекло iOS 26" */
         .container {
             text-align: center;
-            background: rgba(255, 255, 255, 0.65);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
+            background: rgba(255, 255, 255, 0.2); /* Очень легкая прозрачность */
+            backdrop-filter: blur(30px) saturate(180%); /* Сильное размытие и насыщение */
+            -webkit-backdrop-filter: blur(30px) saturate(180%);
             padding: 35px 25px; 
-            border-radius: 40px; /* Красивое скругление */
-            box-shadow: 0 15px 35px rgba(214, 51, 132, 0.15);
+            border-radius: 60px; /* Еще более сильное скругление */
+            box-shadow: 
+                0 10px 40px rgba(0, 0, 0, 0.1), /* Общая тень */
+                inset 0 0 0 1px rgba(255, 255, 255, 0.3), /* Внутренняя светлая рамка */
+                inset 0 0 0 2px rgba(255, 255, 255, 0.05); /* Легкий внутренний блик */
             width: 85%; 
             max-width: 360px;
             min-height: 420px;
@@ -48,7 +50,8 @@
             justify-content: center;
             align-items: center;
             z-index: 10;
-            border: 1px solid rgba(255, 255, 255, 0.4);
+            border: none; /* Убрали старую рамку */
+            transition: all 0.3s ease; /* Плавные переходы */
         }
 
         .cat-emoji { font-size: 70px; margin-bottom: 15px; animation: bounce 2.5s infinite; }
@@ -57,6 +60,7 @@
         h1 { 
             color: #d63384; font-family: 'Pacifico', cursive; font-size: 22px; 
             margin-bottom: 20px; line-height: 1.4; min-height: 80px; 
+            text-shadow: 0 1px 2px rgba(255,255,255,0.7); /* Легкая тень для текста */
         }
 
         .button-area {
@@ -65,22 +69,46 @@
         }
 
         button { 
-            border: none; border-radius: 50px; cursor: pointer; 
+            border: none; border-radius: 40px; /* Немного меньше, чем у контейнера */
+            cursor: pointer; 
             transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             font-weight: bold; font-family: 'Montserrat', sans-serif;
             -webkit-tap-highlight-color: transparent;
+            /* Стили для кнопок в стиле жидкого стекла */
+            background: rgba(255, 255, 255, 0.3); /* Полупрозрачный белый */
+            backdrop-filter: blur(15px); /* Размытие */
+            -webkit-backdrop-filter: blur(15px);
+            box-shadow: 
+                0 4px 10px rgba(0, 0, 0, 0.1),
+                inset 0 0 0 1px rgba(255, 255, 255, 0.5); /* Внутренняя светлая рамка */
+            color: #d63384; /* Цвет текста для соответствия */
         }
 
         .btn-yes { 
-            background-color: #ff4d6d; color: white; 
+            background: linear-gradient(135deg, rgba(255, 77, 109, 0.8), rgba(255, 120, 150, 0.8)); /* Градиент с прозрачностью */
+            color: white; 
             padding: 16px 32px; font-size: 18px; z-index: 11; 
-            box-shadow: 0 5px 15px rgba(255, 77, 109, 0.3);
+            box-shadow: 0 8px 25px rgba(255, 77, 109, 0.4);
         }
-        .btn-no { background-color: #adb5bd; color: white; padding: 12px 25px; font-size: 16px; z-index: 1000; }
+        .btn-no { 
+            background: rgba(173, 181, 189, 0.5); /* Полупрозрачный серый */
+            color: white; 
+            padding: 12px 25px; font-size: 16px; z-index: 1000; 
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+        }
+        /* Увеличение кнопки ДА с сохранением стиля */
+        .btn-yes[style*="font-size"] {
+            background: linear-gradient(135deg, rgba(255, 77, 109, 0.9), rgba(255, 120, 150, 0.9));
+            box-shadow: 
+                0 12px 30px rgba(255, 77, 109, 0.5),
+                inset 0 0 0 1px rgba(255, 255, 255, 0.6);
+            transform: scale(1.02); /* Легкий эффект масштабирования */
+        }
+
 
         #success { display: none; color: #d63384; width: 100%; }
-        .irony-text { font-size: 17px; font-weight: 700; margin-bottom: 15px; color: #555; padding: 0 10px; }
-        .warm-text { font-family: 'Pacifico', cursive; font-size: 26px; }
+        .irony-text { font-size: 17px; font-weight: 700; margin-bottom: 15px; color: #555; padding: 0 10px; text-shadow: 0 1px 1px rgba(255,255,255,0.5); }
+        .warm-text { font-family: 'Pacifico', cursive; font-size: 26px; text-shadow: 0 1px 2px rgba(255,255,255,0.7); }
 
         .shake { animation: shake 0.4s ease; }
         @keyframes shake {
