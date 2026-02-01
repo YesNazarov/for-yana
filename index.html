@@ -5,14 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Для Яны ❤️</title>
     <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     <style>
         body {
-            margin: 0;
-            padding: 0;
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            margin: 0; padding: 0; height: 100vh;
+            display: flex; justify-content: center; align-items: center;
             background-color: #ffc0cb;
             background-image: linear-gradient(135deg, #fce1e4 0%, #ffd1ff 100%);
             font-family: 'Montserrat', sans-serif;
@@ -22,102 +19,42 @@
         .container {
             text-align: center;
             background: rgba(255, 255, 255, 0.9);
-            padding: 40px;
-            border-radius: 30px;
+            padding: 40px; border-radius: 30px;
             box-shadow: 0 15px 35px rgba(214, 51, 132, 0.15);
-            max-width: 550px;
-            width: 90%;
-            z-index: 10;
+            max-width: 550px; width: 90%; z-index: 10;
         }
 
-        .cat-emoji {
-            font-size: 80px;
-            margin-bottom: 20px;
-            display: inline-block;
-            animation: bounce 2s infinite;
-        }
+        .cat-emoji { font-size: 80px; margin-bottom: 20px; display: inline-block; animation: bounce 2s infinite; }
 
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-20px); }
-        }
+        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
 
-        h1 {
-            color: #d63384;
-            font-family: 'Pacifico', cursive;
-            font-size: 24px;
-            margin-bottom: 30px;
-            line-height: 1.4;
-        }
+        h1 { color: #d63384; font-family: 'Pacifico', cursive; font-size: 24px; margin-bottom: 30px; line-height: 1.4; }
 
-        .buttons {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 20px;
-            min-height: 220px;
-        }
+        .buttons { display: flex; justify-content: center; align-items: center; gap: 20px; min-height: 220px; }
 
-        button {
-            border: none;
-            border-radius: 50px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            font-weight: bold;
-            font-family: 'Montserrat', sans-serif;
-        }
+        button { border: none; border-radius: 50px; cursor: pointer; transition: all 0.2s ease; font-weight: bold; font-family: 'Montserrat', sans-serif; }
 
-        .btn-yes {
-            background-color: #ff4d6d;
-            color: white;
-            box-shadow: 0 4px 15px rgba(255, 77, 109, 0.4);
-            padding: 15px 35px;
-            font-size: 18px;
-            white-space: nowrap;
-        }
+        .btn-yes { background-color: #ff4d6d; color: white; box-shadow: 0 4px 15px rgba(255, 77, 109, 0.4); padding: 15px 35px; font-size: 18px; white-space: nowrap; }
 
-        .btn-no {
-            background-color: #adb5bd;
-            color: white;
-            padding: 12px 25px;
-            font-size: 16px;
-            z-index: 1000;
-        }
+        .btn-no { background-color: #adb5bd; color: white; padding: 12px 25px; font-size: 16px; z-index: 1000; }
 
-        #success {
-            display: none;
-            color: #d63384;
-        }
-
-        .irony-text {
-            font-family: 'Montserrat', sans-serif;
-            font-size: 18px;
-            font-weight: 700;
-            margin-bottom: 10px;
-            color: #555;
-        }
-
-        .warm-text {
-            font-family: 'Pacifico', cursive;
-            font-size: 26px;
-        }
+        #success { display: none; color: #d63384; }
+        .irony-text { font-family: 'Montserrat', sans-serif; font-size: 18px; font-weight: 700; margin-bottom: 10px; color: #555; }
+        .warm-text { font-family: 'Pacifico', cursive; font-size: 26px; }
     </style>
 </head>
 <body>
 
     <div class="container">
         <div id="icon" class="cat-emoji">🐱</div>
-        
         <h1 id="question">Яна, будешь моей +1 на всех мероприятиях и посиделках с друзьями? 😊</h1>
-        
         <div class="buttons" id="mainButtons">
             <button class="btn-yes" id="yesBtn" onclick="sheSaidYes()">Да!</button>
             <button class="btn-no" id="noBtn" onmouseover="handleNo()" onclick="handleNo()" ontouchstart="handleNo()">Нет</button>
         </div>
-
         <div id="success">
             <div class="irony-text">Вау, ты правда согласилась! Как неожиданно (нет) 😂</div>
-            <div class="warm-text">На самом деле, я очень рад. Будет круто! 😌</div>
+            <div class="warm-text">На самом деле, я очень рад. Будет круто! ❤️</div>
         </div>
     </div>
 
@@ -131,7 +68,6 @@
             moveButton();
             makeYesBigger();
             noCount++;
-            
             const yesBtn = document.getElementById('yesBtn');
             if (noCount > 2) yesBtn.innerText = "Подумай ещё... 😉";
             if (noCount > 5) yesBtn.innerText = "Да хватит уже мучить кнопку! 😂";
@@ -143,7 +79,6 @@
             const noBtn = document.getElementById('noBtn');
             const x = Math.random() * (window.innerWidth - noBtn.offsetWidth);
             const y = Math.random() * (window.innerHeight - noBtn.offsetHeight);
-            
             noBtn.style.position = 'fixed';
             noBtn.style.left = x + 'px';
             noBtn.style.top = y + 'px';
@@ -154,7 +89,6 @@
             yesButtonSize += 9; 
             yesPaddingHeight += 6;
             yesPaddingWidth += 14;
-
             yesBtn.style.fontSize = yesButtonSize + 'px';
             yesBtn.style.padding = yesPaddingHeight + 'px ' + yesPaddingWidth + 'px';
         }
@@ -164,7 +98,21 @@
             document.getElementById('mainButtons').style.display = 'none';
             document.getElementById('success').style.display = 'block';
             document.getElementById('icon').innerHTML = '😻';
-            document.getElementById('icon').style.animation = 'bounce 0.5s infinite';
+            
+            // Запуск эффекта конфетти
+            var duration = 5 * 1000;
+            var animationEnd = Date.now() + duration;
+            var defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
+
+            function randomInRange(min, max) { return Math.random() * (max - min) + min; }
+
+            var interval = setInterval(function() {
+                var timeLeft = animationEnd - Date.now();
+                if (timeLeft <= 0) return clearInterval(interval);
+                var particleCount = 50 * (timeLeft / duration);
+                confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } }));
+                confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } }));
+            }, 250);
         }
     </script>
 </body>
