@@ -17,7 +17,6 @@
             touch-action: manipulation;
         }
 
-        /* Сердечки теперь поверх фона, но под текстом */
         .hearts-bg {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             pointer-events: none; z-index: 2; 
@@ -33,14 +32,14 @@
 
         .container {
             text-align: center;
-            background: rgba(255, 255, 255, 0.6); /* Больше прозрачности */
+            background: rgba(255, 255, 255, 0.6);
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
             padding: 30px 20px; border-radius: 35px;
             box-shadow: 0 15px 35px rgba(214, 51, 132, 0.1);
             width: 85%; 
-            max-width: 360px; /* Уменьшили ширину */
-            min-height: 420px; /* Фиксированная высота для обеих страниц */
+            max-width: 360px;
+            min-height: 420px;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -66,6 +65,7 @@
             border: none; border-radius: 50px; cursor: pointer; 
             transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             font-weight: bold; font-family: 'Montserrat', sans-serif;
+            -webkit-tap-highlight-color: transparent;
         }
 
         .btn-yes { background-color: #ff4d6d; color: white; padding: 16px 32px; font-size: 18px; z-index: 11; }
@@ -113,7 +113,7 @@
                 heart.style.animationDuration = (Math.random() * 2 + 3) + 's';
                 bg.appendChild(heart);
                 setTimeout(() => heart.remove(), 5000);
-            }, 400); // Чаще летят
+            }, 400);
         }
         createHearts();
 
@@ -144,16 +144,35 @@
         function moveButton() {
             const noBtn = document.getElementById('noBtn');
             const yesBtn = document.getElementById('yesBtn');
+            
+            // Получаем границы кнопки Да
             const rect = yesBtn.getBoundingClientRect();
+            
+            // Определяем безопасные границы экрана (с отступом 30px)
+            const padding = 30;
+            const maxWidth = window.innerWidth - noBtn.offsetWidth - padding;
+            const maxHeight = window.innerHeight - noBtn.offsetHeight - padding;
+
             let x, y, attempts = 0;
-            while (attempts < 30) {
-                x = Math.random() * (window.innerWidth - noBtn.offsetWidth - 40) + 20;
-                y = Math.random() * (window.innerHeight - noBtn.offsetHeight - 40) + 20;
+            let isOverlapping = true;
+
+            while (isOverlapping && attempts < 50) {
+                // Генерируем координаты строго в пределах видимости
+                x = Math.max(padding, Math.random() * maxWidth);
+                y = Math.max(padding, Math.random() * maxHeight);
                 attempts++;
+
+                // Проверка на наложение на кнопку Да
                 const hOverlap = x + noBtn.offsetWidth > rect.left - 40 && x < rect.right + 40;
                 const vOverlap = y + noBtn.offsetHeight > rect.top - 40 && y < rect.bottom + 40;
-                if (noCount <= 4) { if (!(hOverlap && vOverlap)) break; } else break;
+
+                if (noCount <= 4) {
+                    if (!(hOverlap && vOverlap)) isOverlapping = false;
+                } else {
+                    isOverlapping = false;
+                }
             }
+            
             noBtn.style.position = 'fixed';
             noBtn.style.left = x + 'px';
             noBtn.style.top = y + 'px';
