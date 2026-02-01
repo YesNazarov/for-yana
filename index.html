@@ -3,23 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Для Яны ❤️</title>
+    <title>Приглашение для Яны ❤️</title>
     <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     <style>
         body {
             margin: 0; padding: 0; height: 100vh;
-            display: flex; justify-content: center; align-items: center;
+            display: flex; justify-content: center; align-items: flex-start; /* Начинаем сверху, чтобы было место для конверта */
             background-color: #ffc0cb;
             background-image: linear-gradient(135deg, #fce1e4 0%, #ffd1ff 100%);
             font-family: 'Montserrat', sans-serif;
             overflow: hidden;
             touch-action: manipulation;
+            position: relative;
         }
 
+        /* Плавающие сердечки (фон) */
         .hearts-bg {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            pointer-events: none; z-index: 2; 
+            pointer-events: none; z-index: 1; 
         }
         .heart {
             position: absolute; color: rgba(255, 255, 255, 0.8);
@@ -30,13 +32,53 @@
             100% { transform: translateY(-15vh) rotate(360deg); opacity: 0; }
         }
 
+        /* Стилизация конверта */
+        .envelope-wrapper {
+            position: absolute;
+            top: 5vh; /* Отступ сверху */
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            z-index: 5; /* Конверт над сердечками, но под карточкой */
+            pointer-events: none; /* Чтобы не мешал кликам */
+        }
+        .envelope {
+            width: 250px;
+            height: 150px;
+            background-color: #fce4ec; /* Светло-розовый конверт */
+            border-radius: 10px;
+            position: relative;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        .envelope::before { /* Верхний клапан конверта */
+            content: '';
+            position: absolute;
+            top: -50px; left: 0;
+            width: 0; height: 0;
+            border-left: 125px solid transparent;
+            border-right: 125px solid transparent;
+            border-bottom: 60px solid #fce4ec;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+        }
+        .envelope::after { /* Задний клапан */
+            content: '';
+            position: absolute;
+            bottom: 0; left: 0;
+            width: 0; height: 0;
+            border-left: 125px solid #ffdde5;
+            border-right: 125px solid #ffdde5;
+            border-top: 75px solid transparent;
+            border-bottom-left-radius: 10px;
+            border-bottom-right-radius: 10px;
+        }
+
+        /* Стиль карточки "письма" */
         .container {
             text-align: center;
-            background: rgba(255, 255, 255, 0.6);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            padding: 30px 20px; border-radius: 35px;
-            box-shadow: 0 15px 35px rgba(214, 51, 132, 0.1);
+            background: #ffffff; /* Белый лист бумаги */
+            padding: 30px 20px; border-radius: 10px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15); /* Более выраженная тень */
             width: 85%; 
             max-width: 360px;
             min-height: 420px;
@@ -45,7 +87,19 @@
             justify-content: center;
             align-items: center;
             z-index: 10;
-            border: 1px solid rgba(255, 255, 255, 0.4);
+            border: 1px solid rgba(220, 220, 220, 0.6);
+            margin-top: 15vh; /* Отступ, чтобы "письмо" выглядывало из конверта */
+            position: relative; /* Для уголка */
+        }
+
+        /* Декоративный уголок "Дня" */
+        .corner-decoration {
+            position: absolute;
+            top: 10px; right: 10px;
+            font-family: 'Pacifico', cursive;
+            color: #d63384;
+            font-size: 20px;
+            transform: rotate(5deg);
         }
 
         .cat-emoji { font-size: 65px; margin-bottom: 15px; animation: bounce 2.5s infinite; }
@@ -87,7 +141,12 @@
 
     <div class="hearts-bg" id="hearts-bg"></div>
 
+    <div class="envelope-wrapper">
+        <div class="envelope"></div>
+    </div>
+
     <div class="container" id="mainCard">
+        <div class="corner-decoration">Дня</div>
         <div id="icon" class="cat-emoji">🐱</div>
         <h1 id="question">Яна, будешь моей +1 на всех мероприятиях и посиделках с друзьями? 😊</h1>
         
@@ -144,11 +203,8 @@
         function moveButton() {
             const noBtn = document.getElementById('noBtn');
             const yesBtn = document.getElementById('yesBtn');
-            
-            // Получаем границы кнопки Да
             const rect = yesBtn.getBoundingClientRect();
             
-            // Определяем безопасные границы экрана (с отступом 30px)
             const padding = 30;
             const maxWidth = window.innerWidth - noBtn.offsetWidth - padding;
             const maxHeight = window.innerHeight - noBtn.offsetHeight - padding;
@@ -157,12 +213,10 @@
             let isOverlapping = true;
 
             while (isOverlapping && attempts < 50) {
-                // Генерируем координаты строго в пределах видимости
                 x = Math.max(padding, Math.random() * maxWidth);
                 y = Math.max(padding, Math.random() * maxHeight);
                 attempts++;
 
-                // Проверка на наложение на кнопку Да
                 const hOverlap = x + noBtn.offsetWidth > rect.left - 40 && x < rect.right + 40;
                 const vOverlap = y + noBtn.offsetHeight > rect.top - 40 && y < rect.bottom + 40;
 
@@ -172,7 +226,6 @@
                     isOverlapping = false;
                 }
             }
-            
             noBtn.style.position = 'fixed';
             noBtn.style.left = x + 'px';
             noBtn.style.top = y + 'px';
