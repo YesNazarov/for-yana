@@ -208,17 +208,36 @@
         }
 
         function sheSaidYes() {
-            document.getElementById('question').style.display = 'none';
-            document.getElementById('mainButtons').style.display = 'none';
-            document.getElementById('success').style.display = 'block';
-            document.getElementById('icon').innerHTML = '😻';
-            confetti({ 
-                particleCount: 150, 
-                spread: 70, 
-                origin: { y: 0.6 }, 
-                colors: ['#ff4d6d', '#ffffff', '#ffc0cb'] 
-            });
+    document.getElementById('question').style.display = 'none';
+    document.getElementById('mainButtons').style.display = 'none';
+    document.getElementById('success').style.display = 'block';
+    document.getElementById('icon').innerHTML = '🎁'; // Меняем котика на подарок или сердечко
+
+    // Мощный праздничный салют из конфетти
+    const duration = 3 * 1000;
+    const end = Date.now() + duration;
+
+    (function frame() {
+        confetti({
+            particleCount: 3,
+            angle: 60,
+            spread: 55,
+            origin: { x: 0 },
+            colors: ['#ff4d6d', '#ffffff', '#ffc0cb']
+        });
+        confetti({
+            particleCount: 3,
+            angle: 120,
+            spread: 55,
+            origin: { x: 1 },
+            colors: ['#ff4d6d', '#ffffff', '#ffc0cb']
+        });
+
+        if (Date.now() < end) {
+            requestAnimationFrame(frame);
         }
+    }());
+}
     </script>
 </body>
 </html>
