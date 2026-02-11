@@ -6,16 +6,15 @@
     <title>Для Яны ❤️</title>
     
     <meta property="og:title" content="Для Яны ❤️">
-    <meta property="og:description" content="Маленький сюрприз ✨
-">
+    <meta property="og:description" content="Маленький сюрприз ✨">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://yesnazarov.github.io/for-yana/">
     <meta property="og:image" content="https://yesnazarov.github.io/for-yana/IMG_2762.png">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
-
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:image" content="https://yesnazarov.github.io/for-yana/IMG_2762.png">
+
     <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     
@@ -30,7 +29,6 @@
             touch-action: manipulation;
         }
 
-        /* Фон с сердцами */
         .hearts-bg {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             pointer-events: none; z-index: 2; 
@@ -46,6 +44,7 @@
 
         /* Контейнер "Жидкое стекло" */
         .container {
+            position: relative; /* ВАЖНО: чтобы кнопка бегала внутри этого блока */
             text-align: center;
             background: rgba(255, 255, 255, 0.2); 
             backdrop-filter: blur(30px) saturate(180%);
@@ -56,7 +55,7 @@
                 0 10px 40px rgba(0, 0, 0, 0.1),
                 inset 0 0 0 1px rgba(255, 255, 255, 0.3),
                 inset 0 0 0 2px rgba(255, 255, 255, 0.05);
-            width: 85%; max-width: 360px; min-height: 420px;
+            width: 85%; max-width: 360px; min-height: 480px; /* Чуть увеличил высоту для маневров */
             display: flex; flex-direction: column; justify-content: center; align-items: center;
             z-index: 10; border: none; transition: all 0.3s ease;
         }
@@ -68,11 +67,15 @@
             color: #d63384; font-family: 'Pacifico', cursive; font-size: 22px; 
             margin-bottom: 20px; line-height: 1.4; min-height: 80px; 
             text-shadow: 0 1px 2px rgba(255,255,255,0.7);
+            z-index: 20; /* Чтобы текст был выше бегающей кнопки */
+            position: relative;
         }
 
         .button-area {
             display: flex; justify-content: center; align-items: center;
-            gap: 15px; width: 100%; min-height: 200px; position: relative;
+            gap: 15px; width: 100%; min-height: 100px; /* Убрал лишнюю высоту */
+            position: static; /* Важно для позиционирования */
+            margin-top: 20px;
         }
 
         button { 
@@ -88,17 +91,19 @@
 
         .btn-yes { 
             background: linear-gradient(135deg, rgba(255, 77, 109, 0.8), rgba(255, 120, 150, 0.8));
-            color: white; padding: 16px 32px; font-size: 18px; z-index: 11; 
+            color: white; padding: 16px 32px; font-size: 18px; z-index: 30; 
             box-shadow: 0 8px 25px rgba(255, 77, 109, 0.4);
+            position: relative;
         }
 
         .btn-no { 
             background: rgba(173, 181, 189, 0.5); color: white; 
-            padding: 12px 25px; font-size: 16px; z-index: 1000; 
+            padding: 12px 25px; font-size: 16px; z-index: 25; 
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+            position: relative; /* Изначально relative, потом станет absolute */
         }
         
-        #success { display: none; color: #d63384; width: 100%; }
+        #success { display: none; color: #d63384; width: 100%; z-index: 50; position: relative;}
         .irony-text { font-size: 17px; font-weight: 700; margin-bottom: 15px; color: #555; padding: 0 10px; }
         .warm-text { font-family: 'Pacifico', cursive; font-size: 24px; text-shadow: 0 1px 2px rgba(255,255,255,0.7); margin-top: 10px; }
 
@@ -175,9 +180,9 @@
 
             const yesBtn = document.getElementById('yesBtn');
             if (noCount <= 12) {
-                yesButtonSize += 4;
+                yesButtonSize += 3; // Чуть уменьшил шаг роста, так как места стало меньше
                 yesBtn.style.fontSize = yesButtonSize + 'px';
-                yesBtn.style.padding = (16 + noCount * 2) + 'px ' + (32 + noCount * 4) + 'px';
+                yesBtn.style.padding = (16 + noCount * 1.5) + 'px ' + (32 + noCount * 3) + 'px';
             }
 
             if (noCount === 2) yesBtn.innerText = "Подумай ещё... 🙀";
@@ -188,24 +193,52 @@
 
         function moveButton() {
             const noBtn = document.getElementById('noBtn');
+            const card = document.getElementById('mainCard');
             const yesBtn = document.getElementById('yesBtn');
-            const rect = yesBtn.getBoundingClientRect();
-            const padding = 35;
-            const maxWidth = window.innerWidth - noBtn.offsetWidth - padding;
-            const maxHeight = window.innerHeight - noBtn.offsetHeight - padding;
+            
+            // Получаем размеры карточки (контейнера)
+            const cardRect = card.getBoundingClientRect();
+            const yesRect = yesBtn.getBoundingClientRect();
+            
+            // Максимальные координаты внутри карточки
+            const maxX = card.clientWidth - noBtn.offsetWidth - 20; // 20px отступ от края
+            const maxY = card.clientHeight - noBtn.offsetHeight - 20;
 
             let x, y, attempts = 0;
             let isOverlapping = true;
 
+            // Переключаем кнопку в абсолютное позиционирование относительно карточки
+            noBtn.style.position = 'absolute';
+            noBtn.style.margin = '0'; // Убираем отступы, если были
+
             while (isOverlapping && attempts < 50) {
-                x = Math.max(padding, Math.random() * maxWidth);
-                y = Math.max(padding, Math.random() * maxHeight);
+                x = Math.random() * maxX;
+                y = Math.random() * maxY;
+                
+                // Проверяем, чтобы не попасть на текст сверху (примерно 100px)
+                if (y < 80) {
+                    y += 80; 
+                    if (y > maxY) y = maxY - 10;
+                }
+
+                // Временные координаты кнопки "Нет" относительно экрана для проверки наложения
+                const noBtnLeft = cardRect.left + x;
+                const noBtnTop = cardRect.top + y;
+                const noBtnRight = noBtnLeft + noBtn.offsetWidth;
+                const noBtnBottom = noBtnTop + noBtn.offsetHeight;
+
+                // Проверка наложения на кнопку "Да"
+                const hOverlap = noBtnRight > yesRect.left - 10 && noBtnLeft < yesRect.right + 10;
+                const vOverlap = noBtnBottom > yesRect.top - 10 && noBtnTop < yesRect.bottom + 10;
+
+                if (noCount <= 5) { // Первые 5 раз стараемся не перекрывать
+                    if (!(hOverlap && vOverlap)) isOverlapping = false;
+                } else {
+                    isOverlapping = false; // Потом разрешаем всё
+                }
                 attempts++;
-                const hOverlap = x + noBtn.offsetWidth > rect.left - 40 && x < rect.right + 40;
-                const vOverlap = y + noBtn.offsetHeight > rect.top - 40 && y < rect.bottom + 40;
-                if (noCount <= 4) { if (!(hOverlap && vOverlap)) isOverlapping = false; } else { isOverlapping = false; }
             }
-            noBtn.style.position = 'fixed';
+            
             noBtn.style.left = x + 'px';
             noBtn.style.top = y + 'px';
         }
