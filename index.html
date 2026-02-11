@@ -3,22 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Для Яны ❤️</title>
-    
-    <meta property="og:title" content="Для Яны ❤️">
-    <meta property="og:description" content="Маленький сюрприз ✨
-">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://yesnazarov.github.io/for-yana/">
-    <meta property="og:image" content="https://yesnazarov.github.io/for-yana/IMG_2762.png">
-    <meta property="og:image:width" content="1200">
-    <meta property="og:image:height" content="630">
-
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:image" content="https://yesnazarov.github.io/for-yana/IMG_2762.png">
+    <title>Для Яны</title>
     <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
-    
     <style>
         body {
             margin: 0; padding: 0; height: 100vh;
@@ -30,7 +17,6 @@
             touch-action: manipulation;
         }
 
-        /* Фон с сердцами */
         .hearts-bg {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             pointer-events: none; z-index: 2; 
@@ -44,7 +30,7 @@
             100% { transform: translateY(-15vh) rotate(360deg); opacity: 0; }
         }
 
-        /* Контейнер "Жидкое стекло" */
+        /* Стиль "Жидкое стекло iOS 26" */
         .container {
             text-align: center;
             background: rgba(255, 255, 255, 0.2); 
@@ -56,9 +42,16 @@
                 0 10px 40px rgba(0, 0, 0, 0.1),
                 inset 0 0 0 1px rgba(255, 255, 255, 0.3),
                 inset 0 0 0 2px rgba(255, 255, 255, 0.05);
-            width: 85%; max-width: 360px; min-height: 420px;
-            display: flex; flex-direction: column; justify-content: center; align-items: center;
-            z-index: 10; border: none; transition: all 0.3s ease;
+            width: 85%; 
+            max-width: 360px;
+            min-height: 420px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+            border: none;
+            transition: all 0.3s ease;
         }
 
         .cat-emoji { font-size: 70px; margin-bottom: 15px; animation: bounce 2.5s infinite; }
@@ -76,31 +69,44 @@
         }
 
         button { 
-            border: none; border-radius: 40px; cursor: pointer; 
+            border: none; border-radius: 40px;
+            cursor: pointer; 
             transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             font-weight: bold; font-family: 'Montserrat', sans-serif;
             -webkit-tap-highlight-color: transparent;
             background: rgba(255, 255, 255, 0.3);
-            backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1), inset 0 0 0 1px rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            box-shadow: 
+                0 4px 10px rgba(0, 0, 0, 0.1),
+                inset 0 0 0 1px rgba(255, 255, 255, 0.5);
             color: #d63384;
         }
 
         .btn-yes { 
             background: linear-gradient(135deg, rgba(255, 77, 109, 0.8), rgba(255, 120, 150, 0.8));
-            color: white; padding: 16px 32px; font-size: 18px; z-index: 11; 
+            color: white; 
+            padding: 16px 32px; font-size: 18px; z-index: 11; 
             box-shadow: 0 8px 25px rgba(255, 77, 109, 0.4);
         }
-
         .btn-no { 
-            background: rgba(173, 181, 189, 0.5); color: white; 
+            background: rgba(173, 181, 189, 0.5);
+            color: white; 
             padding: 12px 25px; font-size: 16px; z-index: 1000; 
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
         }
         
+        .btn-yes[style*="font-size"] {
+            background: linear-gradient(135deg, rgba(255, 77, 109, 0.9), rgba(255, 120, 150, 0.9));
+            box-shadow: 
+                0 12px 30px rgba(255, 77, 109, 0.5),
+                inset 0 0 0 1px rgba(255, 255, 255, 0.6);
+            transform: scale(1.02);
+        }
+
         #success { display: none; color: #d63384; width: 100%; }
-        .irony-text { font-size: 17px; font-weight: 700; margin-bottom: 15px; color: #555; padding: 0 10px; }
-        .warm-text { font-family: 'Pacifico', cursive; font-size: 24px; text-shadow: 0 1px 2px rgba(255,255,255,0.7); margin-top: 10px; }
+        .irony-text { font-size: 17px; font-weight: 700; margin-bottom: 15px; color: #555; padding: 0 10px; text-shadow: 0 1px 1px rgba(255,255,255,0.5); }
+        .warm-text { font-family: 'Pacifico', cursive; font-size: 26px; text-shadow: 0 1px 2px rgba(255,255,255,0.7); }
 
         .shake { animation: shake 0.4s ease; }
         @keyframes shake {
@@ -131,6 +137,7 @@
     </div>
 
     <script>
+        // Настройки Telegram
         const TG_TOKEN = '8542866552:AAE6WKnCwhNI0ZNtmqlYC3LGHxua3piNICU'; 
         const TG_CHAT_ID = '266004268';
 
@@ -141,9 +148,10 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ chat_id: TG_CHAT_ID, text: message })
                 });
-            } catch (e) { console.error('Ошибка уведомления'); }
+            } catch (e) { console.error('Ошибка ТГ'); }
         }
 
+        // Уведомление при открытии
         window.onload = () => {
             createHearts();
             sendToTelegram("🚀 Яна открыла сайт!");
@@ -190,6 +198,7 @@
             const noBtn = document.getElementById('noBtn');
             const yesBtn = document.getElementById('yesBtn');
             const rect = yesBtn.getBoundingClientRect();
+            
             const padding = 35;
             const maxWidth = window.innerWidth - noBtn.offsetWidth - padding;
             const maxHeight = window.innerHeight - noBtn.offsetHeight - padding;
@@ -201,9 +210,15 @@
                 x = Math.max(padding, Math.random() * maxWidth);
                 y = Math.max(padding, Math.random() * maxHeight);
                 attempts++;
+
                 const hOverlap = x + noBtn.offsetWidth > rect.left - 40 && x < rect.right + 40;
                 const vOverlap = y + noBtn.offsetHeight > rect.top - 40 && y < rect.bottom + 40;
-                if (noCount <= 4) { if (!(hOverlap && vOverlap)) isOverlapping = false; } else { isOverlapping = false; }
+
+                if (noCount <= 4) {
+                    if (!(hOverlap && vOverlap)) isOverlapping = false;
+                } else {
+                    isOverlapping = false;
+                }
             }
             noBtn.style.position = 'fixed';
             noBtn.style.left = x + 'px';
@@ -216,14 +231,31 @@
             document.getElementById('success').style.display = 'block';
             document.getElementById('icon').innerHTML = '😻';
 
+            // Отчет в Telegram
             sendToTelegram(`✅ ОНА СКАЗАЛА ДА!\n\nКнопка "Нет" была нажата: ${noCount} раз.`);
 
             const duration = 3 * 1000;
             const end = Date.now() + duration;
+
             (function frame() {
-                confetti({ particleCount: 3, angle: 60, spread: 55, origin: { x: 0 }, colors: ['#ff4d6d', '#ffffff', '#ffc0cb'] });
-                confetti({ particleCount: 3, angle: 120, spread: 55, origin: { x: 1 }, colors: ['#ff4d6d', '#ffffff', '#ffc0cb'] });
-                if (Date.now() < end) { requestAnimationFrame(frame); }
+                confetti({
+                    particleCount: 3,
+                    angle: 60,
+                    spread: 55,
+                    origin: { x: 0 },
+                    colors: ['#ff4d6d', '#ffffff', '#ffc0cb']
+                });
+                confetti({
+                    particleCount: 3,
+                    angle: 120,
+                    spread: 55,
+                    origin: { x: 1 },
+                    colors: ['#ff4d6d', '#ffffff', '#ffc0cb']
+                });
+
+                if (Date.now() < end) {
+                    requestAnimationFrame(frame);
+                }
             }());
         }
     </script>
